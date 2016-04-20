@@ -16,7 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-var events = [
+var events =
+[
   {
     slug: "How to pass class",
     body: "Come to class"
@@ -40,8 +41,25 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
-        app.render('container');
-          $('#submit').on('click', app.addEntry);
+      app.loadTemplates();
+      app.render('container');
+      app.regiserCallbacks();
+    },
+    loadTemplates: function(){
+      var templateText = document.getElementById('entries');
+
+      app.entriesTemplate = new EJS({text: templateText});
+
+      var addEntryFormTemplateText = document.getElementById('addEntryForm');
+
+      app.addEntryFormTemplate = new EJS({text: addEntryFormTemplateText});
+    },
+    regiserCallbacks: function(){
+      $('#entryForm').hide();
+      $('#addEntry').on('click', function(){
+        $('#entryForm').show();
+      });
+      $('#submit').on('click', app.addEntry);
     },
     addEntry: function(evt){
         evt.preventDefault();
@@ -54,32 +72,27 @@ var app = {
         document.getElementById("entryForm").reset();
 
         app.render("container");
+        $('#entryForm').hide();
     },
 
-    deleteEntry: function(evt){
-        //evt.preventDefault();
-        app.render("container");
-    },
     // Update DOM on a Received Event
     render: function(id) {
       var containerElement = document.getElementById(id);
 
-      var html = '';
-      for (var i=0; i<events.length; i++)
-      {
-        html += '<div><h1>' + events[i].slug + '</h1><p>' + events[i].body +
-        '</p><button data-id="' + i + '" class="delete" type="button">Delete</button></div>';
-      }
+      var html = app.entriesTemplate.render({events: events});
+
       containerElement.innerHTML = html;
 
+      var form = app.addEntryFormTemplate.render();
+      
+      $('#container').append(form);
 
       $(".delete").on('click', function(evt){
         console.log("Delete" + evt);
         var entryID = $(this).attr('data-id');
-        $(this).data('id');
         console.log( entryID );
         events.splice(entryID, 1);
-        app.deleteEntry('container');
+        app.render('container');
       });
 
         /*var parentElement = document.getElementById(id);
