@@ -35,28 +35,39 @@
         <link rel="stylesheet" type="text/css" href="css/index.css">
         <title>Hello World</title>
         <script type='text/template' id='entries'>
-          <% for (var i=0; i<events.length; i++) { %>
+          <h1>Entries</h1>
+          <% for (var i=0; i<posts.length; i++) { %>
             <div>
-              <h1><%= events[i].slug %></h1>
-              <p><%= events[i].body %></p>
+              <h2><a href='/entries/<%= i %>'><%= posts[i].slug %></a></h2>
+              <p><%= posts[i].body %></p>
               <button data-id="<%= i %>" class="delete" type="button">Delete</button>
           </div>
           <% } %>
         </script>
-        <script type='text/template' id='addEntryForm'>
+        <script type="text/template" id='addEntryForm'>
           <form id='entryForm'>
-            Slug: <input id='slug' type='text'>
-            <br/>
-            Body: <input id='body' type='text'>
-            <button id='submit'>Create</button>
+            <table>
+              <tr>
+                <td>Slug:</td><td><input id='slug' type='text'></td>
+              </tr>
+              <tr>
+                <td>Body:</td><td><textarea rows="4" cols="50" id="body"></textarea></td>
+            </tr>
+            <tr>
+              <td colspan=3 align='center'><button id='submit'>Create</button></td>
+            </tr>
           </form>
+        </script>
+        <script type='text/template' id='entry'>
+          <h1><%= post.slug %></h1>
+          <p><%= post.body %></p>
         </script>
     </head>
     <body>
       <nav>
-        <ul>
-          <li id='addEntry'>Add Entry</li>
-          <li>Entries</li>
+        <ul class='navul'>
+            <li class='navli'><a href='/add'>Add Entry</a></li>
+            <li class='navli'><a href='/entries'>Entries</a></li>
         </ul>
       </nav>
       <div id="container">
