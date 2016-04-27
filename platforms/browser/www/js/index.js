@@ -64,7 +64,7 @@ var app = {
       app.registerCallbacks();
     },
     loadTemplates: function(){
-      var templates = ['entries', 'addEntryForm', 'entry' ];
+      var templates = ['entries', 'addEntryForm', 'entry', 'editEntryForm' ];
 
       var templateText = '';
 
@@ -85,11 +85,13 @@ var app = {
         app.route(location.pathname);
       })
       $("#container").on('click', '#submit', app.addEntry);
+      $("#container").on('click', '#update', app.editEntryForm);
       $('#container').on('click', '.delete', app.deleteEntry);
     },
     route: function(path){
       console.log('route'+path);
-      if(path === '/add'){
+      if(path === '/add')
+      {
         console.log('inside');
         app.render('container', 'addEntryForm', {});
         return
@@ -100,16 +102,23 @@ var app = {
         app.render('container', 'entry', {post: app.posts[id]});
         return
       }
+      if(/\/edit\/(\d*)/.test(path))
+      {
+        console.log('edit');
+        var id = parseInt(path.match(/\/edit\/(\d*)/)[1]);
+        app.render('container', 'editEntryForm', {});
+        return
+      }
       app.render('container', 'entries', {posts: app.posts});
     },
     addEntry: function(evt){
-        evt.preventDefault();
-        var slug = $('#slug').val();
-        var body = $('#body').val();
+      evt.preventDefault();
+      var slug = $('#slug').val();
+      var body = $('#body').val();
 
-        var entry = {slug: slug, body: body};
+      var entry = {slug: slug, body: body};
 
-        app.posts.push(entry);
+      app.posts.push(entry);
       util.store('posts', app.posts)
 
       app.render("container", "entries", {posts: app.posts});
@@ -119,6 +128,18 @@ var app = {
       app.posts.splice(entryID, 1);
         util.store('posts', app.posts);
         //document.getElementById("entryForm").reset();
+
+      app.render("container", "entries", {posts: app.posts});
+    },
+    editEntry: function(){
+      evt.preventDefault();
+      var slug = $('#slug').val();
+      var body = $('#body').val();
+
+      var entry = {slug: slug, body: body};
+
+      app.posts.push(entry);
+      util.store('posts', app.posts)
 
       app.render("container", "entries", {posts: app.posts});
     },
