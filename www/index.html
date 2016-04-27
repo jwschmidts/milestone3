@@ -36,29 +36,14 @@
         <title>Today I Learned</title>
         <script type='text/template' id='entries'>
           <h1>Entries</h1>
-          <% for (var i=0; i<posts.length; i++) { %>
+          <% for (var i=(posts.length-1); i>=0; i--) { %>
             <div>
               <h2><a href='/entries/<%= i %>'><%= posts[i].slug %></a></h2>
               <p><%= posts[i].body %></p>
               <button data-id="<%= i %>" class="delete" type="button">Delete</button>
-              <button data-id="<%= i %>" class="edit" type="button"><a href='/edit/<%= i %>'>Edit</a></button>
+              <button data-id="<%= i %>" class="edit" type="button">Edit</button>
           </div>
           <% } %>
-        </script>
-        <script type="text/template" id='editEntryForm'>
-          <form id='editEntry'>
-            <table>
-              <tr>
-                <td>Slug:</td><td><input id='slug' type='text' value=<% post.slug %>></td>
-              </tr>
-              <tr>
-                <td>Body:</td><td><textarea rows="4" cols="50" id="body" value=<% post.body %>></textarea></td>
-            </tr>
-            <tr>
-              <td colspan=3 align='center'><button id='update'>Update</button></td>
-            </tr>
-          </table>
-          </form>
         </script>
         <script type="text/template" id='addEntryForm'>
           <form id='entryForm'>
