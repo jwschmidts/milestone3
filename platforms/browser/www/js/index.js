@@ -87,13 +87,11 @@ var app = {
       $('#container').on('click', '.delete', app.deleteEntry);
       $('#container').on('click', '.edit', app.editEntry);
       $('#container').on('click', '#update', app.updateEntry);
-      $('#container').on('click', '#cance', app.cancel);
+      $('#container').on('click', '#cancel', app.cancelEdit);
     },
     route: function(path){
-      console.log('route'+path);
       if(path === '/add')
       {
-        console.log('inside');
         app.render('container', 'addEntryForm', {});
         return
       }
@@ -150,7 +148,8 @@ var app = {
 
       app.render("container", "entries", {posts: app.posts});
     },
-    cancel: function(evt){
+    cancelEdit: function(evt){
+      evt.preventDefault();
       app.render("container", "entries", {posts: app.posts});
     },
 
