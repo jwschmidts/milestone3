@@ -23,7 +23,6 @@ var util =
   {
     if (arguments.length > 1)
     {
-      console.log('Save: ' + data);
       return localStorage.setItem(namespace, JSON.stringify(data));
     }
     else
@@ -85,8 +84,10 @@ var app = {
         app.route(location.pathname);
       })
       $("#container").on('click', '#submit', app.addEntry);
-      $("#container").on('click', '#update', app.editEntryForm);
       $('#container').on('click', '.delete', app.deleteEntry);
+      $('#container').on('click', '.edit', app.editEntry);
+      $('#container').on('click', '#update', app.updateEntry);
+      $('#container').on('click', '#cance', app.cancel);
     },
     route: function(path){
       console.log('route'+path);
@@ -100,13 +101,6 @@ var app = {
       {
         var id = parseInt(  path.match(/\/entries\/(\d*)/)[1]  );
         app.render('container', 'entry', {post: app.posts[id]});
-        return
-      }
-      if(/\/edit\/(\d*)/.test(path))
-      {
-        console.log('edit');
-        var id = parseInt(path.match(/\/edit\/(\d*)/)[1]);
-        app.render('container', 'editEntryForm', {});
         return
       }
       app.render('container', 'entries', {posts: app.posts});
@@ -131,8 +125,21 @@ var app = {
 
       app.render("container", "entries", {posts: app.posts});
     },
-    editEntry: function(){
+    editEntry: function(evt){
       evt.preventDefault();
+      var entryID = $(this).attr('data-id');
+      var slug = app.posts[entryID].slug;
+      var body = app.posts[entryID].body;
+
+      app.render('container', 'editEntryForm', {});
+
+      $('#slug').val(slug);
+      $('#body').val(body);
+    },
+    updateEntry: function(evt){
+      evt.preventDefault();
+      var entryID = $(this).attr('data-id');
+      app.posts.splice(entryID, 1);
       var slug = $('#slug').val();
       var body = $('#body').val();
 
@@ -141,6 +148,9 @@ var app = {
       app.posts.push(entry);
       util.store('posts', app.posts)
 
+      app.render("container", "entries", {posts: app.posts});
+    },
+    cancel: function(evt){
       app.render("container", "entries", {posts: app.posts});
     },
 

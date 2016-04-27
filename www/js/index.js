@@ -63,7 +63,7 @@ var app = {
       app.registerCallbacks();
     },
     loadTemplates: function(){
-      var templates = ['entries', 'addEntryForm', 'entry' ];
+      var templates = ['entries', 'addEntryForm', 'entry', 'editEntryForm' ];
 
       var templateText = '';
 
@@ -86,6 +86,8 @@ var app = {
       $("#container").on('click', '#submit', app.addEntry);
       $('#container').on('click', '.delete', app.deleteEntry);
       $('#container').on('click', '.edit', app.editEntry);
+      $('#container').on('click', '#update', app.updateEntry);
+      $('#container').on('click', '#cance', app.cancel);
     },
     route: function(path){
       console.log('route'+path);
@@ -129,12 +131,27 @@ var app = {
       var slug = app.posts[entryID].slug;
       var body = app.posts[entryID].body;
 
-      app.render('container', 'addEntryForm', {});
+      app.render('container', 'editEntryForm', {});
 
       $('#slug').val(slug);
       $('#body').val(body);
-      
+    },
+    updateEntry: function(evt){
+      evt.preventDefault();
+      var entryID = $(this).attr('data-id');
       app.posts.splice(entryID, 1);
+      var slug = $('#slug').val();
+      var body = $('#body').val();
+
+      var entry = {slug: slug, body: body};
+
+      app.posts.push(entry);
+      util.store('posts', app.posts)
+
+      app.render("container", "entries", {posts: app.posts});
+    },
+    cancel: function(evt){
+      app.render("container", "entries", {posts: app.posts});
     },
 
     // Update DOM on a Received Event

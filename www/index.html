@@ -60,6 +60,22 @@
           </table>
           </form>
         </script>
+        <script type="text/template" id='editEntryForm'>
+          <form id='editEntry'>
+            <table>
+              <tr>
+                <td>Slug:</td><td><input id='slug' type='text'></td>
+              </tr>
+              <tr>
+                <td>Body:</td><td><textarea rows="4" cols="50" id="body"></textarea></td>
+            </tr>
+            <tr>
+              <td align='right'><button id='update'>Update</button></td>
+              <td align='left'><button id='cancel'>Cancel</button></td>
+            </tr>
+          </table>
+          </form>
+        </script>
         <script type='text/template' id='entry'>
           <h1><%= post.slug %></h1>
           <p><%= post.body %></p>
