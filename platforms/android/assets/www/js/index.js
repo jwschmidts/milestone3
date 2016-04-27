@@ -23,7 +23,6 @@ var util =
   {
     if (arguments.length > 1)
     {
-      console.log('Save: ' + data);
       return localStorage.setItem(namespace, JSON.stringify(data));
     }
     else
@@ -64,7 +63,7 @@ var app = {
       app.registerCallbacks();
     },
     loadTemplates: function(){
-      var templates = ['entries', 'addEntryForm', 'entry' ];
+      var templates = ['entries', 'addEntryForm', 'entry', 'editEntryForm' ];
 
       var templateText = '';
 
@@ -86,11 +85,13 @@ var app = {
       })
       $("#container").on('click', '#submit', app.addEntry);
       $('#container').on('click', '.delete', app.deleteEntry);
+      $('#container').on('click', '.edit', app.editEntry);
+      $('#container').on('click', '#update', app.updateEntry);
+      $('#container').on('click', '#cancel', app.cancelEdit);
     },
     route: function(path){
-      console.log('route'+path);
-      if(path === '/add'){
-        console.log('inside');
+      if(path === '/add')
+      {
         app.render('container', 'addEntryForm', {});
         return
       }
@@ -103,13 +104,13 @@ var app = {
       app.render('container', 'entries', {posts: app.posts});
     },
     addEntry: function(evt){
-        evt.preventDefault();
-        var slug = $('#slug').val();
-        var body = $('#body').val();
+      evt.preventDefault();
+      var slug = $('#slug').val();
+      var body = $('#body').val();
 
-        var entry = {slug: slug, body: body};
+      var entry = {slug: slug, body: body};
 
-        app.posts.push(entry);
+      app.posts.push(entry);
       util.store('posts', app.posts)
 
       app.render("container", "entries", {posts: app.posts});
@@ -120,6 +121,35 @@ var app = {
         util.store('posts', app.posts);
         //document.getElementById("entryForm").reset();
 
+      app.render("container", "entries", {posts: app.posts});
+    },
+    editEntry: function(evt){
+      evt.preventDefault();
+      var entryID = $(this).attr('data-id');
+      var slug = app.posts[entryID].slug;
+      var body = app.posts[entryID].body;
+
+      app.render('container', 'editEntryForm', {});
+
+      $('#slug').val(slug);
+      $('#body').val(body);
+    },
+    updateEntry: function(evt){
+      evt.preventDefault();
+      var entryID = $(this).attr('data-id');
+      app.posts.splice(entryID, 1);
+      var slug = $('#slug').val();
+      var body = $('#body').val();
+
+      var entry = {slug: slug, body: body};
+
+      app.posts.push(entry);
+      util.store('posts', app.posts)
+
+      app.render("container", "entries", {posts: app.posts});
+    },
+    cancelEdit: function(evt){
+      evt.preventDefault();
       app.render("container", "entries", {posts: app.posts});
     },
 
